@@ -1,58 +1,26 @@
 import Head from "next/head";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import Header from "../components/layout/Header";
-import PokemonCard from "../components/ui/PokemonCard";
-// import Search from "../components/ui/Search";
-import { IPokemon } from "../models/Types";
+import PokemonList from "../components/PokemonList";
+import Search from "../components/Search";
+import { useFetchAll } from "../hooks/useFetchAll";
+
 import { PokemonContext } from "../store/PokemonCtxProvider";
 
 export default function Home() {
-	const [isAscending, setisAscending] = useState(false);
-	const [sortNameActive, setSortNameActive] = useState(false);
-	const [sortCatchedActive, setSortCatchedActive] = useState(false);
+	const allPoke = useFetchAll([]);
 
 	const pokemonCtx = useContext(PokemonContext);
 	const pokemons = pokemonCtx.pokemons;
 	const setPokemons = pokemonCtx.setPokemons;
-	const setCatched = pokemonCtx.setCatched;
 
 	useEffect(() => {
-		const fetchPokemons = async () => {
-			const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
-			const data = await resp.json();
-			const tempPokemons: IPokemon[] = data.results.map((pokemon: IPokemon) => {
-				return { ...pokemon, catched: false };
-			});
-			setPokemons(tempPokemons);
-		};
+		localStorage.setItem("isLoggedIn", "true");
 
-		fetchPokemons();
-
-		console.log("useEffect run...");
+		setPokemons(allPoke);
 
 		return () => {};
-	}, [setPokemons]);
-
-	const handleSortName = () => {
-		let sorted;
-
-		if (isAscending) {
-			sorted = [...pokemons].sort((a, b) => (a.name < b.name ? 1 : -1));
-		} else {
-			sorted = [...pokemons].sort((a, b) => (a.name > b.name ? 1 : -1));
-		}
-
-		setPokemons(sorted);
-		setisAscending((prevState) => !prevState);
-
-		if (!sortNameActive) {
-			setSortNameActive(true);
-		}
-	};
-
-	const handleSortCatched = () => {
-		setSortCatchedActive((prevState) => !prevState);
-	};
+	}, [allPoke, setPokemons]);
 
 	return (
 		<div className="w-full flex flex-col items-center">
@@ -63,53 +31,10 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			<main className="w-full flex flex-col justify-center items-center max-w-7xl px-3 py-2 text-slate-700">
+			<main className="w-full flex flex-col justify-center items-center max-w-7xl px-3 py-2 text-slate-700 select-none">
 				<Header />
-
-				<div className="flex gap-2 mt-1 mb-5">
-					<input
-						className="border rounded-md px-3"
-						type="text"
-						placeholder="pokemon..."
-					/>
-					<button className="bg-slate-700 text-gray-200 px-3 rounded-md">
-						Search
-					</button>
-				</div>
-
-				<div className="flex gap-6">
-					<p>Sort: </p>
-					<p
-						className={`border text-gray-500 px-2 rounded-md cursor-pointer ${
-							sortNameActive ? "border-blue-400 bg-blue-400 text-white" : ""
-						}`}
-						onClick={handleSortName}
-					>
-						{isAscending ? "Descending" : "Ascending"}
-					</p>
-					<p
-						className={`border text-gray-500 px-2 rounded-md cursor-pointer ${
-							sortCatchedActive ? "border-blue-400 bg-blue-400 text-white" : ""
-						}`}
-						onClick={handleSortCatched}
-					>
-						Catched
-					</p>
-				</div>
-
-				<div className="w-5/6 sm:w-1/2 my-1">
-					{pokemons ? (
-						pokemons.map((pokemon) => (
-							<PokemonCard
-								key={pokemon.name}
-								id={pokemon.name}
-								pokemon={pokemon}
-							/>
-						))
-					) : (
-						<p>Loading...</p>
-					)}
-				</div>
+				<Search />
+				<PokemonList />
 			</main>
 		</div>
 	);

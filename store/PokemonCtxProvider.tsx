@@ -3,8 +3,10 @@ import { IPokemon, IPokemonCtx } from "../models/Types";
 
 export const PokemonContext = React.createContext<IPokemonCtx>({
 	pokemons: [],
-	setCatched: () => {},
 	setPokemons: () => {},
+	catchedPokes: [],
+	setCatchedPokes: () => {},
+	setCatched: () => {},
 });
 
 type Props = {
@@ -15,10 +17,11 @@ type Props = {
 //todo:-----PokemonCtxProvider component-----://
 const PokemonCtxProvider = (props: Props) => {
 	const [pokemons, setPokemons] = useState<IPokemon[]>([]);
+	const [catchedPokes, setCatchedPokes] = useState<IPokemon[]>([]);
 
 	const setCatched = (id: string) => {
 		const tempPokemons = pokemons.map((pokemon) => {
-			if (pokemon.name === id) {
+			if (pokemon.id === id) {
 				return { ...pokemon, catched: true };
 			}
 			return pokemon;
@@ -30,6 +33,8 @@ const PokemonCtxProvider = (props: Props) => {
 	const contextValue: IPokemonCtx = {
 		pokemons,
 		setPokemons,
+		catchedPokes,
+		setCatchedPokes,
 		setCatched,
 	};
 
