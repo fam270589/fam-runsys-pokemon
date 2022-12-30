@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useFetchAll } from "../hooks/useFetchAll";
+import { IPokemon } from "../models/Types";
 import { PokemonContext } from "../store/PokemonCtxProvider";
 import PokemonCard from "./ui/PokemonCard";
 
@@ -14,20 +14,17 @@ const PokemonList = (props: Props) => {
 	const [sortCatchedActive, setSortCatchedActive] = useState(false);
 	const [sortNameActive, setSortNameActive] = useState(false);
 
-	const allPokes = useFetchAll([]);
-
 	const pokemonCtx = useContext(PokemonContext);
 	const pokemons = pokemonCtx.pokemons;
 	const setPokemons = pokemonCtx.setPokemons;
-	const catchedPokes = pokemonCtx.catchedPokes;
 
 	const handleSortName = () => {
-		let sorted;
+		let sorted: IPokemon[];
 
 		if (isAscending) {
-			sorted = [...pokemons].sort((a, b) => (a.name < b.name ? 1 : -1));
+			sorted = [...pokemons].sort((a, b) => (a.name! < b.name! ? 1 : -1));
 		} else {
-			sorted = [...pokemons].sort((a, b) => (a.name > b.name ? 1 : -1));
+			sorted = [...pokemons].sort((a, b) => (a.name! > b.name! ? 1 : -1));
 		}
 
 		setPokemons(sorted);
@@ -40,9 +37,13 @@ const PokemonList = (props: Props) => {
 
 	const handleSortCatched = () => {
 		if (sortCatchedActive) {
-			setPokemons(allPokes);
+			const arrPokemons = localStorage.getItem("pokemons");
+			const items = JSON.parse(arrPokemons as string);
+
+			setPokemons(items);
 		} else {
-			setPokemons(catchedPokes);
+			const catched = pokemons.filter((pokemon) => pokemon.catched === true);
+			setPokemons(catched);
 		}
 
 		setSortCatchedActive((prevState) => !prevState);

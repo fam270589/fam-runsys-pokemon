@@ -18,6 +18,7 @@ const Details = (props: Props) => {
 	const setCatched = pokemonCtx.setCatched;
 	const setCatchedPokes = pokemonCtx.setCatchedPokes;
 	const pokemons = pokemonCtx.pokemons;
+	const catchedPokes = pokemonCtx.catchedPokes;
 
 	const { query } = useRouter();
 
@@ -38,8 +39,6 @@ const Details = (props: Props) => {
 
 		fetchDetails();
 
-		console.log("useEffect run");
-
 		return () => {};
 	}, [query.id]);
 
@@ -47,7 +46,8 @@ const Details = (props: Props) => {
 		const found = pokemons.find((pokemon) => pokemon.id === id);
 		const newPoke = { ...found, catched: true };
 
-		// setCatchedPokes((prev) => [...prev, newPoke]);
+		// const newList: IPokemon[] = [...catchedPokes, newPoke];
+		// setCatchedPokes(newList);
 		setIsCatched(true);
 		setCatched(id);
 	};

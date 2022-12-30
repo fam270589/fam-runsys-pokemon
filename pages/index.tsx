@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useContext, useEffect } from "react";
+import AddPokemon from "../components/AddPokemon";
 import Header from "../components/layout/Header";
 import PokemonList from "../components/PokemonList";
 import Search from "../components/Search";
@@ -11,13 +12,18 @@ export default function Home() {
 	const allPoke = useFetchAll([]);
 
 	const pokemonCtx = useContext(PokemonContext);
-	const pokemons = pokemonCtx.pokemons;
 	const setPokemons = pokemonCtx.setPokemons;
 
 	useEffect(() => {
-		localStorage.setItem("isLoggedIn", "true");
+		const arrPokemons = localStorage.getItem("pokemons");
 
-		setPokemons(allPoke);
+		if (arrPokemons === null) {
+			localStorage.setItem("pokemons", JSON.stringify(allPoke));
+		}
+
+		const items = JSON.parse(arrPokemons as string);
+
+		setPokemons(items);
 
 		return () => {};
 	}, [allPoke, setPokemons]);
@@ -33,6 +39,7 @@ export default function Home() {
 
 			<main className="w-full flex flex-col justify-center items-center max-w-7xl px-3 py-2 text-slate-700 select-none">
 				<Header />
+				<AddPokemon />
 				<Search />
 				<PokemonList />
 			</main>

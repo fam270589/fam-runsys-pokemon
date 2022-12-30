@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { useFetchAll } from "../hooks/useFetchAll";
 import { IPokemon } from "../models/Types";
 import { PokemonContext } from "../store/PokemonCtxProvider";
 
@@ -11,7 +10,6 @@ type Props = {
 //todo:-----Search component-----://
 const Search = (props: Props) => {
 	const [searchKey, setSearchKey] = useState("");
-	const allPoke = useFetchAll([]);
 
 	const pokemonCtx = useContext(PokemonContext);
 	const pokemons = pokemonCtx.pokemons;
@@ -24,12 +22,15 @@ const Search = (props: Props) => {
 
 	const handleSearch = (key: string) => {
 		if (key.trim() === "") {
-			setPokemons(allPoke);
+			const arrPokemons = localStorage.getItem("pokemons");
+			const items = JSON.parse(arrPokemons as string);
+
+			setPokemons(items);
 			return;
 		}
 
-		const newList: IPokemon[] = allPoke.filter((pokemon) =>
-			pokemon.name.includes(key.toLowerCase())
+		const newList: IPokemon[] = pokemons.filter((pokemon) =>
+			pokemon.name?.includes(key.toLowerCase())
 		);
 		setPokemons(newList);
 		setSearchKey("");
@@ -40,7 +41,7 @@ const Search = (props: Props) => {
 			<input
 				className="border rounded-md px-3"
 				type="text"
-				placeholder="show all..."
+				placeholder="pokemon..."
 				value={searchKey}
 				onChange={handleOnChange}
 				onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {

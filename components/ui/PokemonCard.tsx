@@ -7,7 +7,7 @@ type Props = {
 	children?: React.ReactNode;
 	// props....
 	pokemon: IPokemon;
-	id: string;
+	id: string | undefined;
 };
 
 //todo:-----PokemonCard component-----://
@@ -17,11 +17,10 @@ const PokemonCard = ({ id, pokemon }: Props) => {
 	const catchedPokes = pokemonCtx.catchedPokes;
 	const setCatchedPokes = pokemonCtx.setCatchedPokes;
 
-	const handleCatch = (id: string) => {
+	const handleCatch = (id: string | undefined) => {
 		setCatched(id);
-		const newPoke: IPokemon = { ...pokemon, catched: true };
-		setCatchedPokes((prev) => [...prev, newPoke]);
-		console.log(catchedPokes);
+		// const newPoke: IPokemon = { ...pokemon, catched: true };
+		// setCatchedPokes((prev) => [...prev, newPoke]);
 	};
 
 	return (

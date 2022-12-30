@@ -19,7 +19,7 @@ const PokemonCtxProvider = (props: Props) => {
 	const [pokemons, setPokemons] = useState<IPokemon[]>([]);
 	const [catchedPokes, setCatchedPokes] = useState<IPokemon[]>([]);
 
-	const setCatched = (id: string) => {
+	const setCatched = (id: string | undefined) => {
 		const tempPokemons = pokemons.map((pokemon) => {
 			if (pokemon.id === id) {
 				return { ...pokemon, catched: true };
@@ -27,6 +27,7 @@ const PokemonCtxProvider = (props: Props) => {
 			return pokemon;
 		});
 
+		localStorage.setItem("pokemons", JSON.stringify(tempPokemons));
 		setPokemons(tempPokemons);
 	};
 

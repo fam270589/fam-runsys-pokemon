@@ -1,8 +1,9 @@
 export interface IPokemon {
-	id: string;
-	name: string;
-	url: string;
-	catched: boolean;
+	id: string | undefined;
+	name: string | undefined;
+	url?: string | undefined;
+	catched: boolean | undefined;
+	details?: IDetails | undefined;
 }
 
 export interface IPokemonCtx {
@@ -10,14 +11,15 @@ export interface IPokemonCtx {
 	setPokemons: React.Dispatch<React.SetStateAction<IPokemon[]>>;
 	catchedPokes: IPokemon[];
 	setCatchedPokes: React.Dispatch<React.SetStateAction<IPokemon[]>>;
-	setCatched: (id: string) => void;
+	setCatched: (id: string | undefined) => void;
 }
 
 export interface IDetails {
-	sprites: { front_default: string };
-	name: string;
-	types: { type: { name: string } }[];
-	height: number;
-	weight: number;
-	abilities: string;
+	sprites?: { front_default: string };
+	name: string | undefined;
+	type?: string | undefined;
+	types?: { type: { name: string } }[];
+	height: number | string | undefined;
+	weight: number | string | undefined;
+	abilities?: string;
 }
