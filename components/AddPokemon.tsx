@@ -1,5 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
-import { IDetails, IPokemon } from "../models/Types";
+import React, { useContext, useState } from "react";
 import { PokemonContext } from "../store/PokemonCtxProvider";
 
 type Props = {
@@ -10,34 +9,30 @@ type Props = {
 //todo:-----AddPokemon component-----://
 const AddPokemon = (props: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const nameRef = useRef<HTMLInputElement>(null);
-	const typeRef = useRef<HTMLInputElement>(null);
-	const heightRef = useRef<HTMLInputElement>(null);
-	const weightRef = useRef<HTMLInputElement>(null);
+
+	const [name, setName] = useState("");
+	const [type, setType] = useState("");
+	const [height, setHeight] = useState("");
+	const [weight, setWeight] = useState("");
 
 	const pokemonCtx = useContext(PokemonContext);
 	const pokemons = pokemonCtx.pokemons;
 	const setPokemons = pokemonCtx.setPokemons;
 
-	const handleAdd = (e: React.FormEvent) => {
-		e.preventDefault();
+	const handleAdd = (event: React.FormEvent) => {
+		event.preventDefault();
 
-		const enteredName = nameRef.current?.value;
-		const enteredType = typeRef.current?.value;
-		const enteredHeight = heightRef.current?.value;
-		const enteredWeight = weightRef.current?.value;
-
-		const newPoke: IDetails = {
-			name: enteredName,
-			type: enteredType,
-			height: enteredHeight,
-			weight: enteredWeight,
+		const newPoke = {
+			name,
+			type,
+			height,
+			weight,
 		};
 
-		const newItem: IPokemon = {
-			name: enteredName,
+		const newItem = {
+			name,
 			catched: false,
-			id: enteredName,
+			id: name,
 			details: newPoke,
 		};
 
@@ -45,51 +40,62 @@ const AddPokemon = (props: Props) => {
 
 		setPokemons(newest);
 		localStorage.setItem("pokemons", JSON.stringify(newest));
+
+		setName("");
+		setType("");
+		setHeight("");
+		setWeight("");
 	};
 
 	return (
-		<div className="mb-5 flex flex-col items-center">
+		<div className="w-full mt-3 mb-5 flex flex-col items-center">
 			<h1
-				className="bg-orange-400 px-3 text-white rounded-md cursor-pointer mb-3"
+				className="bg-orange-400 py-1 px-3 text-white rounded-md cursor-pointer mb-5"
 				onClick={() => setIsOpen((prev) => !prev)}
 			>
 				Add new pokemon +
 			</h1>
 			{isOpen ? (
 				<form className="flex flex-col gap-2" onSubmit={handleAdd}>
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-2">
 						<label htmlFor="name">Name:</label>
 						<input
+							value={name}
 							type="text"
 							className="border rounded-md px-2 mx-1"
-							ref={nameRef}
+							onChange={(e) => setName(e.target.value)}
 						/>
 					</div>
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-2">
 						<label htmlFor="type">Type:</label>
 						<input
+							value={type}
 							type="text"
 							className="border rounded-md px-2 mx-1"
-							ref={typeRef}
+							onChange={(e) => setType(e.target.value)}
 						/>
 					</div>
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-2">
 						<label htmlFor="height">Height:</label>
 						<input
+							value={height}
 							type="text"
 							className="border rounded-md px-2 mx-1"
-							ref={heightRef}
+							onChange={(e) => setHeight(e.target.value)}
 						/>
 					</div>
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-2">
 						<label htmlFor="weight">Weight:</label>
 						<input
+							value={weight}
 							type="text"
 							className="border rounded-md px-2 mx-1"
-							ref={weightRef}
+							onChange={(e) => setWeight(e.target.value)}
 						/>
 					</div>
-					<button className="bg-green-300 rounded-md">Add</button>
+					<button className="bg-green-300 rounded-md mt-1 mb-7 py-1">
+						Add
+					</button>
 				</form>
 			) : null}
 		</div>

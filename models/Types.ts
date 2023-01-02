@@ -8,10 +8,12 @@ export interface IPokemon {
 
 export interface IPokemonCtx {
 	pokemons: IPokemon[];
+	fetchPokemons: () => void;
 	setPokemons: React.Dispatch<React.SetStateAction<IPokemon[]>>;
 	catchedPokes: IPokemon[];
 	setCatchedPokes: React.Dispatch<React.SetStateAction<IPokemon[]>>;
 	setCatched: (id: string | undefined) => void;
+	getLocalPokemons: () => void;
 }
 
 export interface IDetails {

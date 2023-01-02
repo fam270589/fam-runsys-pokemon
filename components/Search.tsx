@@ -14,20 +14,19 @@ const Search = (props: Props) => {
 	const pokemonCtx = useContext(PokemonContext);
 	const pokemons = pokemonCtx.pokemons;
 	const setPokemons = pokemonCtx.setPokemons;
+	const fetchPokemons = pokemonCtx.fetchPokemons;
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const key = e.target.value;
 		setSearchKey(key);
 	};
 
-	const handleSearch = (key: string) => {
-		if (key.trim() === "") {
-			const arrPokemons = localStorage.getItem("pokemons");
-			const items = JSON.parse(arrPokemons as string);
+	const handleReset = () => {
+		fetchPokemons();
+	};
 
-			setPokemons(items);
-			return;
-		}
+	const handleSearch = (key: string) => {
+		if (key.trim() === "") return;
 
 		const newList: IPokemon[] = pokemons.filter((pokemon) =>
 			pokemon.name?.includes(key.toLowerCase())
@@ -37,25 +36,33 @@ const Search = (props: Props) => {
 	};
 
 	return (
-		<div className="flex gap-2 mt-1 mb-5">
-			<input
-				className="border rounded-md px-3"
-				type="text"
-				placeholder="pokemon..."
-				value={searchKey}
-				onChange={handleOnChange}
-				onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-					if (e.key === "Enter") {
-						handleSearch(searchKey);
-					}
-				}}
-			/>
-			<button
-				className="bg-slate-700 text-gray-200 px-3 rounded-md "
-				onClick={() => handleSearch(searchKey)}
+		<div className="w-full flex flex-col my-7 items-center gap-2">
+			<p
+				className="underline underline-offset-2 hover:text-blue-500"
+				onClick={handleReset}
 			>
-				Search
-			</button>
+				Reset List
+			</p>
+			<div className="w-full flex gap-2 justify-center">
+				<input
+					className="border rounded-md px-3 py-1"
+					type="text"
+					placeholder="pokemon..."
+					value={searchKey}
+					onChange={handleOnChange}
+					onKeyDown={(event) => {
+						if (event.key === "Enter") {
+							handleSearch(searchKey);
+						}
+					}}
+				/>
+				<button
+					className="bg-slate-700 text-gray-200 px-3 py-1 rounded-md "
+					onClick={() => handleSearch(searchKey)}
+				>
+					Search
+				</button>
+			</div>
 		</div>
 	);
 };
